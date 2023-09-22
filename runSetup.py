@@ -36,9 +36,9 @@ settingsIN = "/Users/jacklogan/Desktop/symbop_code_check/"
 #############################
 
 # Paths to where to find data and save output files
-IN = "/Users/jacklogan/Desktop/symbop_code_check/"
-OUT = "/Users/jacklogan/Desktop/symbop_code_check/"
-FILE = "melted_domains_timestep_69500_scaled.txt"
+IN = "/Users/Desktop/"
+OUT = "/Users/Desktop/"
+FILE = "simulated_sample.txt"
 
 # l-values to use for spherical harmonics (set as list)
 l = [4,6]
