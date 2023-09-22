@@ -21,7 +21,7 @@ be used. Do not comment out settingsIN.
 ###############################################
 ## Path to Settings.txt file (if being used) ##
 ###############################################
-settingsIN = "/Users/jacklogan/Desktop/symbop_code_check/"
+settingsIN = "/Users/Desktop/"
 
 
 
