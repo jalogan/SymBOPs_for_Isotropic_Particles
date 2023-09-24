@@ -120,6 +120,9 @@ Ghostscript
         If there is an input file "Settings.txt" in the settingsIN directory, the parameters listed 
 		in "runSetup.py" will be ignored.
 
+	**If there is a "Settings.txt" file, but it has an error (such as a missing /) the code defaults
+	to the settings manually written in "runSetup.py" and the "Settings.txt" file will be overwritten.
+
         **Regardless of choice, after all parameters are defined run the module "runSetup.py".
 
         **Before running: input data file should be in the directory IN, and "Settings.txt" (if applicable) 
