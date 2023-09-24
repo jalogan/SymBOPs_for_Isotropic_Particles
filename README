@@ -51,7 +51,7 @@ The code uses the Symmetrized Bond-Order Parameters (SymBOPs) to look for
 bond-orientational order in the neighborhood of each particle. SymBOPs are a modified version
 of the traditional bond-order parameters (BOPs) that imbue the BOP with the symmetry of the
 underlying lattice that we want to find. SymBOPs are applied to each bond, rather than each particle
-(as traditional BOPs). In general the order parameter is an l-th rank tensors, but in 3D there
+(as traditional BOPs). In general the order parameter is an l-th rank tensor, but in 3D there
 is a convenient 1-to-1 mapping between symmetric, traceless tensors of rank l to
 spherical harmonics of degree l. This code takes advantage of the spherical harmonic form of the
 order parameters.
@@ -120,12 +120,12 @@ Ghostscript
         If there is an input file "Settings.txt" in the settingsIN directory, the parameters listed 
 		in "runSetup.py" will be ignored.
 
-	**If there is a "Settings.txt" file, but it has an error (such as a missing /) the code defaults
+	** If there is a "Settings.txt" file, but it has an error (such as a missing /) the code defaults
 	to the settings manually written in "runSetup.py" and the "Settings.txt" file will be overwritten.
 
-        **Regardless of choice, after all parameters are defined run the module "runSetup.py".
+        ** Regardless of choice, after all parameters are defined run the module "runSetup.py".
 
-        **Before running: input data file should be in the directory IN, and "Settings.txt" (if applicable) 
+        ** Before running: input data file should be in the directory IN, and "Settings.txt" (if applicable) 
 		must be in the directory you define as the variable settingsIN.
 
 
@@ -145,6 +145,8 @@ Ghostscript
 		l=6. We also call it for other l-values in order to make the heatmaps seen in our publication.
 
 
+	** The code has not been checked for periodic boundary conditions yet. It also currently only accepts 
+	cubic boxes as the boundaries. This will be changed in the future. 
 
 
     b. Input data file format
