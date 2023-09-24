@@ -3,12 +3,6 @@ from scipy.spatial.transform import Rotation as R
 
 
 
-#def Rz(a):
-#	return np.asarray([[np.cos(a),-np.sin(a),0],[np.sin(a),np.cos(a),0],[0,0,1]])
-
-#def Ry(a):
-#	return np.asarray([[np.cos(a),0,np.sin(a)],[0,1,0],[-np.sin(a),0,np.cos(a)]])
-
 
 
 
@@ -65,50 +59,17 @@ def rotateData(phi_theta_psi, particle_data, PBC, L=None):
 
 
 
-	#############
-	#R = np.dot(Rz(-psi), np.dot(Ry(-theta),Rz(-phi)))
-	#############
 	rot = R.from_euler('ZYZ', [-psi,-theta,-phi], degrees=False)
+
+
 
 
 	# Rotate all particles
 	if PBC==False:
-		#particle_data = {i:list(np.dot(R, particle_data[i][:3]))+[particle_data[i][3]] for i in particle_data}
 		particle_data = {i:list(rot.apply(particle_data[i][:3]))+[particle_data[i][3]] for i in particle_data}
 	else:
-		#particle_data_ext = {i:[list(np.dot(R, particle_data_ext[i][j][:3]))+[particle_data_ext[i][j][3]] for j in range(len(particle_data_ext[i]))] for i in particle_data_ext}
 		particle_data_ext = {i:[list(rot.apply(particle_data_ext[i][j][:3]))+[particle_data_ext[i][j][3]] for j in range(len(particle_data_ext[i]))] for i in particle_data_ext}
 
-
-
-	'''
-	if PBC==True:
-		for i in particle_data:
-			if particle_data[i][0] > L/2:
-				xn = -L/2 + (np.abs(particle_data[i][0] - L/2))%L	
-			elif particle_data[i][0] < -L/2:
-				xn = -L/2 + (np.abs(particle_data[i][0]) - L/2)%L	
-			else:
-				xn = particle_data[i][0]
-
-			if particle_data[i][1] > L/2:
-				yn = -L/2 + (np.abs(particle_data[i][1] - L/2))%L	
-			elif particle_data[i][1] < -L/2:
-				yn = -L/2 + (np.abs(particle_data[i][1]) - L/2)%L	
-			else:
-				yn = particle_data[i][1]
-
-			if particle_data[i][2] > L/2:
-				zn = -L/2 + (np.abs(particle_data[i][2] - L/2))%L	
-			elif particle_data[i][2] < -L/2:
-				zn = -L/2 + (np.abs(particle_data[i][2]) - L/2)%L	
-			else:
-				zn = particle_data[i][2]
-
-			particle_data[i][0] = xn
-			particle_data[i][1] = yn
-			particle_data[i][2] = zn
-	'''
 
 	if PBC==True:
 		# pick which realization of each particle is inside the box

@@ -34,10 +34,6 @@ def importSettings(self, settingsIN):
 		with open(str(settingsIN)+"Settings.txt", "r") as f:
 			lines = f.readlines()
 			for i in range(len(lines)):
-				#if lines[i].strip("\n")==str(ratio):
-				#	line = lines[i+1].strip("\n").split("\t")
-				#	rmin = float(line[0])
-				#	rmax = float(line[1])
 				if lines[i].strip("\n")=="Box":
 					if lines[i+1].strip("\n")!="None":
 						for j in [1,2,3]:
@@ -58,14 +54,6 @@ def importSettings(self, settingsIN):
 				elif (lines[i].strip("\n")).lower()=="dom_min":
 					line = lines[i+1].strip("\n")
 					dom_min = int(line)
-				#elif (lines[i].strip("\n")).lower()=="ideal_qs":
-				#	line = lines[i+1].strip("\n").split(",")
-				#	line_ = []
-				#	ideal_qs = {}
-				#	for li in line:
-				#		line_ = li.split(":")
-				#		#print(line_)
-				#		ideal_qs[int(line_[0])] = [float(line_[1])]
 				elif (lines[i].strip("\n")).lower()=="half_angle":
 					line = lines[i+1].strip("\n")
 					half_angle = float(line)
@@ -98,7 +86,6 @@ def importSettings(self, settingsIN):
 
 
 	# Set class variables for Sample
-	#self.setSampleVariables(boundaries, rmin, rmax, dom_min, l, ideal_qs, ql4_ring_width, half_angle, lattice_type, IN, FILE, OUT)
 	self.setSampleVariables(boundaries, rmin, rmax, dom_min, l, ql4_ring_width, half_angle, lattice_type, IN, FILE, OUT)
 
 

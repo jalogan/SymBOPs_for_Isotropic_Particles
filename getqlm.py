@@ -1,7 +1,4 @@
-import sys
 import numpy as np
-#import pandas as pd
-#import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib import rc
 from copy import deepcopy
@@ -10,8 +7,6 @@ from pathlib import Path
 from computeBondTypeRadii import computeBondTypeRadii
 
 plt.rc('text', usetex=True)
-plt.rc('text.latex', preamble=r'\usepackage{physics}')
-
 
 
 
@@ -262,26 +257,7 @@ def getqlm(self, lval, init_phi_theta_psi, include_all_bonds=False):
 	min_angle = min_max_angles[0][0]
 	max_angle = min_max_angles[0][1]
 
-	'''
-	if lval==4:
-		with open(self.OUT[lval]+"possible_domain_equatorial_pts_l=4_"+str(round(min_angle,2))+"_rads_to_"+str(round(max_angle,2))+"_rads.txt", "w") as f:
-			f.write("Bond num\tangle\n"+str(len(self.equatorial_pts_doms))+"\n")
 
-		with open(self.OUT[lval]+"possible_domain_equatorial_pts_l=4_"+str(round(min_angle,2))+"_rads_to_"+str(round(max_angle,2))+"_rads.txt", "a") as f:
-			for val in self.equatorial_pts_doms:
-				#f.write(str(val[0])+"\t"+str(val[1])+"\n")
-				f.write(str(val[0])+"\t"+str(val[2])+"\n")
-
-	if lval==6:
-		with open(self.OUT[lval]+"possible_domain_non_equatorial_pts_l=6_"+str(round(min_angle,2))+"_rads_to_"+str(round(max_angle,2))+"_rads.txt", "w") as f:
-			f.write("Bond num\tangle\n"+str(len(self.non_equatorial_pts_doms))+"\n")
-
-		with open(self.OUT[lval]+"possible_domain_non_equatorial_pts_l=6_"+str(round(min_angle,2))+"_rads_to_"+str(round(max_angle,2))+"_rads.txt", "a") as f:
-			for val in self.non_equatorial_pts_doms:
-				#f.write(str(val[0])+"\t"+str(val[1])+"\n")
-				f.write(str(val[0])+"\t"+str(val[2])+"\n")
-	'''
-	
 
 
 

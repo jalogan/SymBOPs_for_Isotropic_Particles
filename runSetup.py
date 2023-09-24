@@ -21,7 +21,7 @@ be used. Do not comment out settingsIN.
 ###############################################
 ## Path to Settings.txt file (if being used) ##
 ###############################################
-settingsIN = "/Users/Desktop/"
+settingsIN = ""
 
 
 
@@ -36,9 +36,9 @@ settingsIN = "/Users/Desktop/"
 #############################
 
 # Paths to where to find data and save output files
-IN = "/Users/Desktop/"
-OUT = "/Users/Desktop/"
-FILE = "simulated_sample.txt"
+IN = ""
+OUT = ""
+FILE = ""
 
 # l-values to use for spherical harmonics (set as list)
 l = [4,6]

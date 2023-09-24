@@ -1,6 +1,5 @@
 from Particle import Particle
 from importSettings import importSettings
-#from ql_local import ql_local
 from ql_global import ql_global
 from maxQl4 import maxQl4
 from getqlm import getqlm
@@ -10,7 +9,6 @@ from pathlib import Path
 import numpy as np
 from distPBC import distPBC
 from scipy.spatial import distance_matrix
-#from copy import deepcopy
 
 """
 The main class for the analysis. It has functions to read the data, find the neighbors, compute BOPs,
@@ -116,7 +114,7 @@ class Sample:
 			self.boxL = 2.05*max(max(x), max(y), max(z), np.abs(min(x)), np.abs(min(y)), np.abs(min(z)))	
 			self.boundaries = [[-0.5*self.boxL, 0.5*self.boxL], [-0.5*self.boxL, 0.5*self.boxL], [-0.5*self.boxL, 0.5*self.boxL]]
 		else:
-			self.boxL = self.boundaries[0][1] - self.boundaries[0][0]
+			self.boxL = max(self.boundaries[0][1] - self.boundaries[0][0], self.boundaries[0][1] - self.boundaries[0][0], self.boundaries[0][1] - self.boundaries[0][0])
 
 
 		self.centers = {}

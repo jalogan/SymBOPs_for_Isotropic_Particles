@@ -101,7 +101,7 @@ def bonds_to_parts(self, unrot_obj, dom_num, min_max_angles):
 			parts_used_in_doms += dom
 			domain_summary.append(dom)
 
-
+			'''
 			# write ql values for each particle in a domain to a common file
 			with open(str(self.OUT[0])+"ql_values_for_all_particles_in_some_domain.txt", "a") as f: 
 				for i in dom:
@@ -111,7 +111,7 @@ def bonds_to_parts(self, unrot_obj, dom_num, min_max_angles):
 							f.write(str(self.centers[i].ql[self.l[lval]])+"\t")
 						else:
 							f.write(str(self.centers[i].ql[self.l[lval]])+"\n")
-
+			'''
 
 
 

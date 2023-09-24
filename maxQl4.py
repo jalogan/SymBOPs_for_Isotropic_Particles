@@ -27,13 +27,6 @@ def maxQl4(self, l):
 	idealcubic = {2:idealcubic2, 4:idealcubic4, 6:idealcubic6}
 
 	hot_spot_signals = []
-	'''
-	with open(str(self.OUT[l])+"hot_spot_signals.txt","w") as bestf:
-			bestf.write('signal_strength,\tphi,\ttheta,\tpsi\tin radians\n')
-	'''
-
-	#with open(str(self.OUT[l])+"hot_spots.txt","w") as bestf:
-	#		bestf.write('Pl value,\tphi,\ttheta,\tpsi\tin radians\n')
 
 
 
@@ -171,11 +164,8 @@ def maxQl4(self, l):
 	plt.tight_layout()
 
 
-	#plt.savefig(str(self.OUT[l])+"q"+str(l)+"/Max_Q"+str(l)+"4_heatmap_theta_0_2pi_vs_phi_0_2pi_phi="+str(round(best_phi,2))+"_theta="+str(round(best_theta,2))+"_psi="+str(round(best_psi,2))+"_step_"+str(step_phi)+".png",dpi=300)
 	plt.savefig(Path(self.OUT[l]+"Max_Q"+str(l)+"4_heatmap_theta_0_2pi_vs_phi_0_2pi_phi="+str(round(best_phi,2))+"_theta="+str(round(best_theta,2))+"_psi="+str(round(best_psi,2))+"_step_"+str(step_phi)+".png"),dpi=300)
 
-
-	#plt.savefig(str(self.OUT[l])+"q"+str(l)+"/Max_Q"+str(l)+"4_heatmap_theta_0_2pi_vs_phi_0_2pi_phi="+str(round(best_phi,2))+"_theta="+str(round(best_theta,2))+"_psi="+str(round(best_psi,2))+"_step_"+str(step_phi)+".pdf",dpi=300)
 	plt.savefig(Path(self.OUT[l]+"Max_Q"+str(l)+"4_heatmap_theta_0_2pi_vs_phi_0_2pi_phi="+str(round(best_phi,2))+"_theta="+str(round(best_theta,2))+"_psi="+str(round(best_psi,2))+"_step_"+str(step_phi)+".pdf"),dpi=300)
 
 
@@ -193,14 +183,6 @@ def maxQl4(self, l):
 	# Sort hot_spots by signal strength from largest to smallest
 	hot_spot_signals.sort(key = lambda x: x[0], reverse=True)
 
-	'''
-	#with open(str(self.OUT[l])+"q"+str(l)+"/hot_spot_signals.txt","w") as bestf:
-	with open(str(self.OUT[l])+"hot_spot_signals.txt","w") as bestf:
-		#bestf.write('Pl value,\tphi,\ttheta,\tpsi\tin radians\n')
-		for hot in hot_spot_signals:
-			bestf.write(str(hot[0])+"\t"+str(hot[1])+"\t"+str(hot[2])+"\t"+str(hot[3])+"\n")
-	'''
-
 
 	# Write data to file
 	# make signals list of all data to use below
@@ -208,39 +190,12 @@ def maxQl4(self, l):
 	norm = colors.Normalize(vmin=0.0, vmax=max_z_val)
 
 	signals = []
-	#with open(self.OUT+"q"+str(l)+"/sphere_colormap_phi="+str(round(best_phi,2))+"_theta="+str(round(best_theta,2))+"_psi="+str(round(best_psi,2))+"_step_"+str(step_phi)+"_data.txt", "w") as f:
-	'''
-	with open(self.OUT[l]+"sphere_colormap_phi="+str(round(best_phi,2))+"_theta="+str(round(best_theta,2))+"_psi="+str(round(best_psi,2))+"_step_"+str(step_phi)+"_data.txt", "w") as f:
-
-
-		f.write("phi_index, theta_index, signal, phi, theta\n")
-		f.write("use spherical_map.py in .../SymBOPs/extra/ to plot.\n")
-		vals = []
-		pts = []
-		for ph in range(len(phi_range)):
-			for th in range(len(theta_range)):
-				#for ps in range(len(psi_range)):
-
-				theta = th*step_theta
-				phi = ph*step_phi
-
-				val = z[th, ph]
-		
-				vals.append(norm(val))
-				signals.append([phi, theta, val])
-
-				f.write(str(ph)+"\t"+str(th)+"\t"+str(val)+"\t"+str(phi)+"\t"+str(theta)+"\n")			
-	'''
-
-	#vals = []
 	pts = []
 	for ph in range(len(phi_range)):
 		for th in range(len(theta_range)):
-			#for ps in range(len(psi_range)):
 			theta = th*step_theta
 			phi = ph*step_phi
 			val = z[th, ph]
-			#vals.append(norm(val))
 			signals.append([phi, theta, val])
 
 
@@ -304,15 +259,11 @@ def maxQl4(self, l):
 			# Check if this is close to being orthogonal to the currently found best_axes (Looking for orthogonal coordinates)
 			keep = True
 			for v in best_axes_vecs:
-				#axis_vec = [np.sin(v[1])*np.cos(v[0]), np.sin(v[1])*np.sin(v[0]), np.cos(v[1])]
 				cosangle = np.dot(v, vec)
-				#print("cos(angle): ", np.abs(cosangle))
 				if np.abs(cosangle) > perp_thresh:#0.03:
 					keep = False
 			if keep==True:
-				#print("phi, theta: ", phi_val, theta_val)
-				#print("vec: ", vec)				
-	
+
 				# Use Gram-Schmidt process to make sure the vector is orthogonal to others
 				new_vec = np.array(copy.deepcopy(vec))
 				
@@ -320,21 +271,15 @@ def maxQl4(self, l):
 					proj = np.array(np.dot(np.array(new_vec), np.array(axis))*np.array(axis))
 					new_vec -= proj
 				
-				#print("new_vec: ", new_vec)
-
 				# Make sure we have right-handed coords
 				if len(best_axes)==2:
 					cross = best_axes_vecs[1][0]*new_vec[1] - best_axes_vecs[1][1]*new_vec[0]
 					if cross < 0:
 						new_vec *= -1
 
-				#print("new_vec: ", new_vec)
-
 				# Make sure the vectors remain unit
 				mag = np.sqrt(sum([c**2 for c in new_vec]))
 				new_vec /= mag
-
-				#print("new_vec unit: ", new_vec)
 
 				# get new angles
 				if new_vec[2]!=0.0:		
@@ -358,33 +303,18 @@ def maxQl4(self, l):
 
 				for goodvec in best_axes_vecs:
 					inner = np.dot(vec_check, goodvec)
-					#print("vec_check: ", vec_check)
-					#print("goodvec: ", goodvec)
-					#print("inner: ", inner)
 					if np.abs(inner) > perp_thresh:
 						keep = False
 
 
-
 				if keep==True and sum([i**2 for i in new_vec]) > 0.0:				
 					best_axes.append([phi_val, theta_val])
-					best_axes_vecs.append(vec_check)#new_vec)
+					best_axes_vecs.append(vec_check)
 					
-
-				#if sum([i**2 for i in vec]) > 0.0:				
-				#	best_axes.append([phi_val, theta_val])
-				#	best_axes_vecs.append(vec)
-				#print("best_axes_vecs: ", best_axes_vecs)
-
 			if len(best_axes)==self.dim:
 				break
-			#print("\n")
-
-	###print("best_axes [phi, theta]: ", best_axes, len(best_axes))
-	###print("best_axes_vecs: ", best_axes_vecs)
 
 
-	#with open(self.OUT+"q"+str(l)+"/best_axes_phi_theta.txt", "w") as g:
 	with open(self.OUT[l]+"best_axes_phi_theta.txt", "w") as g:
 		g.write("best axes spherical phi, theta for x,y,z\nfirst vector becomes z-axis, other two x, and y (right-handed coords)\nLast lines are the unit vectors representing these axes\n\n")
 		for ba in best_axes:
@@ -402,16 +332,11 @@ def maxQl4(self, l):
 	best_axes_vecs_RyRz = []
 	best_axes_RyRz = []
 	for v in best_axes_vecs:
-		####R = np.dot(Ry(-best_axes[0][1]),Rz(-best_axes[0][0]))
-		####unit = np.dot(R, v)
-
 		v = np.dot(Rz(-best_axes[0][0]), v)
 		unit = np.dot(Ry(-best_axes[0][1]), v)
 
 		# New vecs
 		best_axes_vecs_RyRz.append(unit)
-
-		#print("(maxQl4.py) unit: ", unit)
 
 		if unit[2]!=0.0:		
 			theta = np.arctan(np.sqrt(unit[0]**2 + unit[1]**2)/(unit[2]))
@@ -434,16 +359,12 @@ def maxQl4(self, l):
 
 		# New angles
 		best_axes_RyRz.append([phi, theta])
-		#print("new angles: ", best_axes_RyRz[-1])
-
 
 	
 
 
 	# Rotate to align other vecs to x- and y-axes
 	cross_prod = np.cross(best_axes_vecs_RyRz[1], best_axes_vecs_RyRz[2])	
-	#print("(should only have z-comp) cross_prod: ", cross_prod)
-	#print("phi_rot to bring the X- and Y- axes to the global X-axis: ", best_axes_RyRz[1][0], best_axes_RyRz[2][0])
 
 	if cross_prod[2] > 0:
 		phi_rot = best_axes_RyRz[1][0] 
