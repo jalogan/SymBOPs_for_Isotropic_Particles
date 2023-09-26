@@ -93,14 +93,17 @@ class Sample:
 			fileread = f.readlines()[self.startline:]
 			for line in fileread:
 				inp.append(line.strip("\n").split(self.delim))
-
-		num = [int(i[0]) for i in inp]
-		if len(list(set(num))) < len(num):
-			num = range(len(num))
+			
 		x = [float(i[1]) for i in inp]
 		y = [float(i[2]) for i in inp]
 		if self.dim==3:	
 			z = [float(i[3]) for i in inp]
+
+		try:
+			num = [int(i[0]) for i in inp]
+		except:
+			#if len(list(set(num))) < len(num):
+			num = range(len(x))
 		
 		COM = [sum(x)/len(x), sum(y)/len(y), sum(z)/len(z)]
 
