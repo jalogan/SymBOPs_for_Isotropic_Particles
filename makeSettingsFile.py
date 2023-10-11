@@ -9,7 +9,6 @@ The new file is stored in the directory .../iter<iteration number>/ for the curr
 def makeSettingsFile(dataIN, dataFILE, dataOUT, l, half_angle, ql4_ring_width, boundaries, rmin, rmax, dom_min, lattice_type):
 
 
-
 	with open(str(dataIN)+"Settings.txt", "w") as f:
 		f.write("dataIN\n"+str(dataIN)+"\n")	
 		f.write("dataFILE\n"+str(dataFILE)+"\n")

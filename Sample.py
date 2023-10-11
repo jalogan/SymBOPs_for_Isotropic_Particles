@@ -9,6 +9,8 @@ from pathlib import Path
 import numpy as np
 from distPBC import distPBC
 from scipy.spatial import distance_matrix
+import sys
+
 
 """
 The main class for the analysis. It has functions to read the data, find the neighbors, compute BOPs,
@@ -51,6 +53,7 @@ class Sample:
 		out = self.OUT[:]
 		self.OUT = {-1:out}
 		self.OUT[0] = out+"iter"+str(iteration)+"/"
+
 
 		# Make the directory if it doesn't exist
 		Path(self.OUT[0]).mkdir(parents=False, exist_ok=True)
@@ -134,7 +137,7 @@ class Sample:
 
 
 	
-	def getAllNeighbors(self):
+	def getAllNeighbors(self, rot=0):
 
 		if not self.pbc:
 			# Reset bonds
@@ -159,9 +162,10 @@ class Sample:
 			neighsum = sum([len(self.centers[p].neighs) for p in self.centers])
 			avgnumneighs = neighsum/len(self.centers)
 
-			print("Number of particles: ", len(self.centers))
-			print("Number of bonds: ", len(self.bonds))
-			print("Avg Neighs/particle: ", avgnumneighs,"\n")
+			if not rot:
+				print("\nNumber of particles: ", len(self.centers))
+				print("Number of bonds: ", len(self.bonds))
+				print("Avg Neighs/particle: ", round(avgnumneighs, 2))
 
 		else:
 			center_keys = list(self.centers.keys())
@@ -219,72 +223,88 @@ class Sample:
 
 	def getPotentialDomainParticles(self, lval, init_phi_theta_psi):
 		self.min_max_angles[lval] = getqlm(self, lval, init_phi_theta_psi[self.analysis_lval], include_all_bonds=False)
+		# Erase last line printed to screen
+		sys.stdout.write('\x1b[1A')
+		sys.stdout.write('\x1b[2K')
+		sys.stdout.write('\x1b[1A')
+		sys.stdout.write('\x1b[2K')
+
 
 	def getDomains(self, unrot_obj, iteration):
 		numdoms_found = 0
 		if iteration > 0:
 			numdoms_found = len([1 for it in Sample.domain_summary for d in Sample.domain_summary[it]])
 
+		print("\nFinding domains for the current orientation.")
 
-		for dom in range(len(self.min_max_angles[4])):
-			doms_parts_, bonds_used_in_doms_, parts_used_in_doms_, new_domains = bonds_to_parts(self, unrot_obj, dom, self.min_max_angles[4])
+		#for dom in range(len(self.min_max_angles[4])):
+		doms_parts_, bonds_used_in_doms_, parts_used_in_doms_, new_domains, num_rem_parts = bonds_to_parts(self, unrot_obj)#, dom, self.min_max_angles[4])
 
-			
-			for dom_num, dom_parts in enumerate(new_domains):#bonds_used_in_doms_:
-
-				dom_num_consec = dom_num + numdoms_found
-
-				'''
-				# write bonds_used_in_current_dom to file to recreate the percolation in a visualization
-				with open(self.OUT[0]+"bonds_used_in_dom_"+str(dom_num_consec)+".txt", "w") as f:
-					f.write("bond\tparticle_i\tparticle_j\n\n")
-					for bb in bonds_used_in_doms_[dom_num]:
-						f.write(str(bb)+"\t"+str(self.bonds[bb][0])+"\t"+str(self.bonds[bb][1])+"\n")
-				'''
-				# write particle positions in domain to file
-				with open(str(self.OUT[0])+"domain_"+str(dom_num_consec)+".txt", "w") as f:
-					f.write("particle_number\tx\ty\tz\n"+str(len(new_domains[dom_num]))+"\n")
-				with open(str(self.OUT[0])+"domain_"+str(dom_num_consec)+".xyz", "w") as f:
-					f.write(str(len(new_domains[dom_num]))+"\n\n")
-
-				with open(str(self.OUT[0])+"domain_"+str(dom_num_consec)+".txt", "a") as f:
-					for i in new_domains[dom_num]:
-						f.write(str(i)+"\t"+str(unrot_obj.centers[i].x)+"\t"+str(unrot_obj.centers[i].y)+"\t"+str(unrot_obj.centers[i].z)+"\n")
-				with open(str(self.OUT[0])+"domain_"+str(dom_num_consec)+".xyz", "a") as f:
-					for i in new_domains[dom_num]:
-						f.write("c\t"+str(unrot_obj.centers[i].x)+"\t"+str(unrot_obj.centers[i].y)+"\t"+str(unrot_obj.centers[i].z)+"\t"+str(dom_num_consec)+"\n")
+		# Erase last line printed to screen
+		sys.stdout.write('\x1b[1A')
+		sys.stdout.write('\x1b[2K')
 
 
+		
+		for dom_num, dom_parts in enumerate(new_domains):#bonds_used_in_doms_:
 
+			dom_num_consec = dom_num + numdoms_found
 
-			# Collect all bonds and particles found in some domain up to this point
-			Sample.bonds_used_in_doms += [b for d in bonds_used_in_doms_ for b in d]
-			Sample.parts_used_in_doms += parts_used_in_doms_
-				
-			# Update the bonds and particles that should be excluded from future domain searches
-			Sample.excluded_bonds = list(set(Sample.bonds_used_in_doms))
-			Sample.excluded_parts = list(set(Sample.parts_used_in_doms))
+			'''
+			# write bonds_used_in_current_dom to file to recreate the percolation in a visualization
+			with open(self.OUT[0]+"bonds_used_in_dom_"+str(dom_num_consec)+".txt", "w") as f:
+				f.write("bond\tparticle_i\tparticle_j\n\n")
+				for bb in bonds_used_in_doms_[dom_num]:
+					f.write(str(bb)+"\t"+str(self.bonds[bb][0])+"\t"+str(self.bonds[bb][1])+"\n")
+			'''
+			# write particle positions in domain to file
+			with open(str(self.OUT[0])+"domain_"+str(dom_num_consec)+".txt", "w") as f:
+				f.write("particle_number\tx\ty\tz\n"+str(len(new_domains[dom_num]))+"\n")
+			with open(str(self.OUT[0])+"domain_"+str(dom_num_consec)+".xyz", "w") as f:
+				f.write(str(len(new_domains[dom_num]))+"\n\n")
 
-			self.domains = new_domains
-			self.bonds_in_domains = bonds_used_in_doms_
-			Sample.domain_summary[iteration] = new_domains
-			Sample.bonds_for_each_domain[iteration] = bonds_used_in_doms_
-
-			domain_sizes = [len(j) for i in Sample.domain_summary for j in Sample.domain_summary[i]]
-
-
-			print("\n#------------------------------------------#\nEnd of Iteration")
-			print("Summary of Domains: ")
-			for ind, num in enumerate(domain_sizes):
-				print("domain {}: {}".format(ind, num))
-			print("{} particles found across {} ordered domains: ".format(len(Sample.parts_used_in_doms), len(domain_sizes)))
-			print("#------------------------------------------#\n\n")
+			with open(str(self.OUT[0])+"domain_"+str(dom_num_consec)+".txt", "a") as f:
+				for i in new_domains[dom_num]:
+					f.write(str(i)+"\t"+str(unrot_obj.centers[i].x)+"\t"+str(unrot_obj.centers[i].y)+"\t"+str(unrot_obj.centers[i].z)+"\n")
+			with open(str(self.OUT[0])+"domain_"+str(dom_num_consec)+".xyz", "a") as f:
+				for i in new_domains[dom_num]:
+					f.write("c\t"+str(unrot_obj.centers[i].x)+"\t"+str(unrot_obj.centers[i].y)+"\t"+str(unrot_obj.centers[i].z)+"\t"+str(dom_num_consec)+"\n")
 
 
 
-			if len(parts_used_in_doms_) > 0:
-				return 1
-			return 0
+
+		# Collect all bonds and particles found in some domain up to this point
+		Sample.bonds_used_in_doms += [b for d in bonds_used_in_doms_ for b in d]
+		Sample.parts_used_in_doms += parts_used_in_doms_
+
+		Sample.bonds_used_in_doms = list(set(Sample.bonds_used_in_doms))
+		Sample.parts_used_in_doms = list(set(Sample.parts_used_in_doms))
+
+		# Update the bonds and particles that should be excluded from future domain searches
+		Sample.excluded_bonds = Sample.bonds_used_in_doms #list(set(Sample.bonds_used_in_doms))
+		Sample.excluded_parts = Sample.parts_used_in_doms #list(set(Sample.parts_used_in_doms))
+
+		self.domains = new_domains
+		self.bonds_in_domains = bonds_used_in_doms_
+		Sample.domain_summary[iteration] = new_domains
+		Sample.bonds_for_each_domain[iteration] = bonds_used_in_doms_
+
+		domain_sizes = [len(j) for i in Sample.domain_summary for j in Sample.domain_summary[i]]
+
+		total_parts = num_rem_parts + len(Sample.excluded_parts)
+
+		#print("\n#------------------------------------------#\nEnd of Iteration")
+		print("\n#------------------------------------------#")
+		print("Summary of Domains: ")
+		for ind, num in enumerate(domain_sizes):
+			print("domain {}: {}".format(ind, num))
+		print("{} particles found across {} ordered domains.".format(len(Sample.parts_used_in_doms), len(domain_sizes)))
+		print("{}% particles found in some domain.".format(round(100*len(Sample.parts_used_in_doms)/(total_parts),1)))
+		print("End of Iteration\n#------------------------------------------#\n\n")
+
+		if len(parts_used_in_doms_) > 0:
+			return 1
+		return 0
 
 
 

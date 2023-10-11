@@ -5,7 +5,7 @@ rc('text', usetex=True)
 from wigner_D import Wigner_D
 import copy
 from pathlib import Path
-
+from tqdm import tqdm
 
 
 def Rz(a):
@@ -19,6 +19,8 @@ def Ry(a):
 
 
 def maxQl4(self, l):
+
+	print("\nFinding the Euler angles with the highest SymBOP signal for l="+str(l)+".")
 
 	idealcubic2 = [-0.2082449933578368-0.35492033774429954j, 0, -0.8329799734313472, 0, -0.1041224966789184+0.35492033774429954j]
 	idealcubic4 = [-0.4564354645876385, 0, 0, 0, -0.7637626158259734, 0, 0, 0, -0.4564354645876387]
@@ -54,7 +56,7 @@ def maxQl4(self, l):
 
 	psi = 0.0
 	j=-1
-	for phi in phi_range:
+	for phi in tqdm(phi_range, leave=False):
 		j+=1
 		i=-1
 		for theta in theta_range:
@@ -429,7 +431,7 @@ def maxQl4(self, l):
 
 	best_list.sort(reverse=True)
 
-	print("l={}: best_phi: {}, best_theta: {}, best_psi: {} ".format(l, best_phi, best_theta, best_psi))
+	print("l={}: best_phi: {}, best_theta: {}, best_psi: {} ".format(l, round(best_phi, 4), round(best_theta, 4), round(best_psi, 4)))
 
 
 

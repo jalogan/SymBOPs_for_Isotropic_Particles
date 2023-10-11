@@ -1,12 +1,10 @@
 import numpy as np
+import sys
 
 
 
 
-
-
-
-def bonds_to_parts(self, unrot_obj, dom_num, min_max_angles):
+def bonds_to_parts(self, unrot_obj):#, dom_num, min_max_angles):
 
 
 
@@ -36,7 +34,14 @@ def bonds_to_parts(self, unrot_obj, dom_num, min_max_angles):
 	bonds_used_in_doms = []
 	parts_used_in_doms = []
 	domain_summary = []
+	#curs = ["|", "\\", "─"*2, "/"] 
+	#curs_stat=0
+	#it=0
 	while len(bonds_used) < len(bs):
+		#print(curs[curs_stat]+" ", round(100*len(bonds_used)/len(bs),1), "%", " "+curs[curs_stat])
+		progress = round(100*len(bonds_used)/len(bs))
+		print(progress,"%","|",'\u2588'*progress," "*(100-progress), "| ",str(len(bonds_used))+"/"+str(len(bs)),sep="")
+		#print('\u2588'*progress, progress, "%")
 		b = np.random.choice([i for i in bs if i not in bonds_used])
 		parta = self.bonds[b][0]
 		partb = self.bonds[b][1]
@@ -114,9 +119,18 @@ def bonds_to_parts(self, unrot_obj, dom_num, min_max_angles):
 			'''
 
 
+		# Show percent finished
+		# remove last text printed to screen
+		sys.stdout.write('\x1b[1A')
+		sys.stdout.write('\x1b[2K')
+		#it+=1
+		#curs_stat = it%4
 
 	# write the particels that are NOT in domains to a file to resubmit as a "new" sample
-	remaining_data = [k for k in self.centers if k not in parts_used_in_doms]
+	###remaining_data = [k for k in self.centers if k not in parts_used_in_doms]
+	remaining_data = list(set(self.centers) - set(parts_used_in_doms))
+
+
 	with open(str(self.OUT[0])+"data_remaining.txt", "w") as f:
 		f.write(str(len(remaining_data))+"\n\n")
 
@@ -134,7 +148,7 @@ def bonds_to_parts(self, unrot_obj, dom_num, min_max_angles):
 
 
 
-	return [dom, bonds_used_in_doms, parts_used_in_doms, domain_summary]
+	return [dom, bonds_used_in_doms, parts_used_in_doms, domain_summary, len(remaining_data)]
 
 
 

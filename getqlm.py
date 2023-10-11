@@ -4,6 +4,7 @@ from matplotlib import rc
 from copy import deepcopy
 from matplotlib import pyplot
 from pathlib import Path
+from tqdm import tqdm
 from computeBondTypeRadii import computeBondTypeRadii
 
 plt.rc('text', usetex=True)
@@ -14,6 +15,7 @@ plt.rc('text', usetex=True)
 
 def getqlm(self, lval, init_phi_theta_psi, include_all_bonds=False):
 
+	print("\nCollecting bonds for potential ordered domains using l="+str(lval)+".")
 
 	phi, theta, psi = init_phi_theta_psi
 	
@@ -27,7 +29,7 @@ def getqlm(self, lval, init_phi_theta_psi, include_all_bonds=False):
 	chi_l = {4:np.sqrt(7/12), 6:-np.sqrt(2)/4}
 	ql4 = []
 
-	for i in [part for part in self.centers if part not in self.excluded_parts]:
+	for i in tqdm([part for part in self.centers if part not in self.excluded_parts], leave=False):
 
 		# Get all ql4 values 
 		# Write file of all ql4 components for each bond
@@ -75,17 +77,18 @@ def getqlm(self, lval, init_phi_theta_psi, include_all_bonds=False):
 
 
 	##########################################################
-	## New Method using the fact that we can find the orientation of all
-	## axes (x,y,z) for the coordinate system--No need for histogram to find peaks
+	## Method using the fact that we can find the orientation of all
 
 	if lval==4:
-		min_max_angles = [[np.pi-self.half_angle, np.pi+self.half_angle]]
+		#min_max_angles = [[np.pi-self.half_angle, np.pi+self.half_angle]]
+		min_max_angles = [np.pi-self.half_angle, np.pi+self.half_angle]
 	elif lval==6:
-		min_max_angles = [[-self.half_angle, self.half_angle]]
-		
+		#min_max_angles = [[-self.half_angle, self.half_angle]]
+		min_max_angles = [-self.half_angle, self.half_angle]
+			
 
-	min_angle = min_max_angles[0][0]
-	max_angle = min_max_angles[0][1]
+	min_angle = min_max_angles[0]#min_max_angles[0][0]
+	max_angle = min_max_angles[1]#min_max_angles[0][1]
 
 
 
@@ -254,8 +257,8 @@ def getqlm(self, lval, init_phi_theta_psi, include_all_bonds=False):
 
 	
 	# Write domain points to file
-	min_angle = min_max_angles[0][0]
-	max_angle = min_max_angles[0][1]
+	min_angle = min_max_angles[0]#min_max_angles[0][0]
+	max_angle = min_max_angles[1]#min_max_angles[0][1]
 
 
 

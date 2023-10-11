@@ -72,7 +72,7 @@ dom_min = 35
 # No need to change anything below this line.
 #--------------------------------------------------------------------
 
-if settingsIN!=None and Path.is_file(Path(settingsIN+"Settings.txt")):
+if settingsIN!=None and ( Path.is_file(Path(settingsIN+"Settings.txt")) or Path.is_file(Path(settingsIN)) ):
 	main(settingsIN)
 else:
 	makeSettingsFile(IN, FILE, OUT, l, half_angle, qlm_ring_width, boundaries, rmin, rmax, dom_min, lattice_type)

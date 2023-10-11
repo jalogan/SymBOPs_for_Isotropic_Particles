@@ -6,6 +6,7 @@ from makeVisFile import makeVisFile
 from pathlib import Path
 
 
+
 """
 This is the brains of the analysis. From here all of the functions are called.
 """
@@ -19,7 +20,7 @@ def main(settingsIN):
 	objects = {0:[init_sam]}
 
 
-	print("\nSettings Used:\n")
+	print("\n--Settings Used--\n")
 	print("boundaries: ", init_sam.boundaries)
 	print("rmin, rmax: ", init_sam.rmin, init_sam.rmax)
 	print("dom_min: ", init_sam.dom_min)
@@ -28,11 +29,11 @@ def main(settingsIN):
 	print("half_angle: ", init_sam.half_angle)
 	print("lattice: ", init_sam.lattice_type)
 	print("dataIN: ", init_sam.IN)
-	print("dataOUT: ", init_sam.OUT)
+	print("dataOUT: ", init_sam.OUT[-1])
 	print("dataFILE: ", init_sam.FILE)
 	print("#------------------------------------------#\n\n")
 
-	print("iteration: 0")
+	print("--iteration 0--")
 
 
 
@@ -44,15 +45,18 @@ def main(settingsIN):
 		
 		if iteration > 0:
 			# Make new Settings.txt file to initialize new instance of Sample
-			makeSettingsFile(objects[0][0].OUT[0], "data_remaining.txt", objects[0][0].OUT[-1], objects[0][0].l, objects[0][0].half_angle, objects[0][0].ql4_ring_width, objects[0][0].boundaries, objects[0][0].rmin, objects[0][0].rmax, objects[0][0].dom_min, objects[0][0].lattice_type)
+			###makeSettingsFile(objects[0][0].OUT[0], "data_remaining.txt", objects[0][0].OUT[-1], objects[0][0].l, objects[0][0].half_angle, objects[0][0].ql4_ring_width, objects[0][0].boundaries, objects[0][0].rmin, objects[0][0].rmax, objects[0][0].dom_min, objects[0][0].lattice_type)
+			makeSettingsFile(objects[iteration-1][0].OUT[0], "data_remaining.txt", objects[0][0].OUT[-1], objects[0][0].l, objects[0][0].half_angle, objects[0][0].ql4_ring_width, objects[0][0].boundaries, objects[0][0].rmin, objects[0][0].rmax, objects[0][0].dom_min, objects[0][0].lattice_type)
 
-			print("iteration: ", iteration)
+
+			print("--iteration ", iteration,"--")
 
 			# Make instance of Sample
-			init_sam = Sample(iteration, objects[0][0].OUT[0])
+			##init_sam = Sample(iteration, objects[0][0].OUT[0])
+			init_sam = Sample(iteration, objects[iteration-1][0].OUT[0])
 			objects[iteration] = [init_sam]
 
-
+		
 
 		## Get all attributes of the remaining particles in the sample ##
 
@@ -111,7 +115,7 @@ def main(settingsIN):
 		## Get all attributes of the rotated remaining particles in the sample ##
 
 		# Get neighbors for all particles
-		rot_sam.getAllNeighbors()
+		rot_sam.getAllNeighbors(1)
 
 		# Compute local ql order parameters for each particle
 		# This includes computing the single-bond ql for each

@@ -85,6 +85,7 @@ Pathlib
 LaTeX (required for plot labels)
 Pandas 1.5.2
 Seaborn 0.12.1
+tqdm 4.66.1
 
 *Matplotlib's LaTeX support requires:
 A LaTeX installation

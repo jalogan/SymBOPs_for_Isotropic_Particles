@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import sys
 
 
 def importSettings(self, settingsIN):
@@ -26,12 +26,16 @@ def importSettings(self, settingsIN):
 	##########################################
 	## Read Settings from file Settings.txt ##
 	##########################################
+	if settingsIN[-3:]=="txt" or settingsIN[-3:]=="xyz":
+		inpath = Path(str(settingsIN))
+	else:
+		inpath = Path(str(settingsIN)+"Settings.txt")
 
 	OUT = None
-	if settingsIN!=None and Path.is_file(Path(str(settingsIN)+"Settings.txt")):
+	if settingsIN!=None and Path.is_file(inpath):
 		bound = []
 		boundaries = []
-		with open(str(settingsIN)+"Settings.txt", "r") as f:
+		with open(inpath, "r") as f:
 			lines = f.readlines()
 			for i in range(len(lines)):
 				if lines[i].strip("\n")=="Box":
@@ -45,9 +49,11 @@ def importSettings(self, settingsIN):
 					else:
 						boundaries = None
 				elif (lines[i].strip("\n")).lower()=="lattice_type":
-					line = lines[i+1].strip("\n").split("\t")
+					if lines[i+1][0]=="\"":
+						line = lines[i+1].split("\"")[1].strip("\n").split("\t")
+					else:
+						line = lines[i+1].strip("\n").split("\t")
 					lattice_type = str(line[0]).lower()
-
 				elif (lines[i].strip("\n")).lower()=="l":
 					line = lines[i+1].strip("\n").split(",")
 					l = [int(i) for i in line]
@@ -62,18 +68,24 @@ def importSettings(self, settingsIN):
 					ql4_ring_width = float(line)
 				elif (lines[i].strip("\n")).upper()=="DATAIN":
 					line = lines[i+1].strip("\n")
+					if line[-1]=="\"":
+						line = line.split("\"")[1]
 					IN = str(line)
 				elif (lines[i].strip("\n")).upper()=="DATAOUT":
 					line = lines[i+1].strip("\n")
+					if line[-1]=="\"":
+						line = line.split("\"")[1]
 					OUT = str(line)
 				elif (lines[i].strip("\n")).upper()=="DATAFILE":
 					line = lines[i+1].strip("\n")
+					if line[-1]=="\"":
+						line = line.split("\"")[1]
 					FILE = str(line)
 				elif (lines[i].strip("\n")).lower()=="rmin_rmax":
 					line = lines[i+1].strip("\n").split(",")
 					rmin,rmax = [float(i) for i in line]
 
-
+	
 		if OUT == None:
 			OUT = IN
 
@@ -87,8 +99,6 @@ def importSettings(self, settingsIN):
 
 	# Set class variables for Sample
 	self.setSampleVariables(boundaries, rmin, rmax, dom_min, l, ql4_ring_width, half_angle, lattice_type, IN, FILE, OUT)
-
-
 
 
 
